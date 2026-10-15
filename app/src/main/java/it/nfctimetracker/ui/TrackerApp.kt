@@ -62,7 +62,7 @@ fun TrackerApp(vm: TrackerViewModel, nfc: String, openNfc: () -> Unit) {
         if (data == null) Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
         else Column(Modifier.fillMaxSize().padding(padding).widthIn(max = 1100.dp).padding(horizontal = 20.dp).imePadding()) {
             Row(Modifier.fillMaxWidth().padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(44.dp).clip(MaterialTheme.shapes.small).background(Teal), contentAlignment = Alignment.Center) { Icon(Icons.Outlined.Nfc, null, tint = Color.White) }
+                Box(Modifier.size(44.dp).clip(MaterialTheme.shapes.small).background(Teal), contentAlignment = Alignment.Center) { Icon(Icons.Outlined.Nfc, null, tint = MaterialTheme.colorScheme.onPrimary) }
                 Column(Modifier.weight(1f).padding(start = 12.dp)) {
                     Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                     Text(if (admin) "AREA AMMINISTRATIVA" else "TERMINALE PRESENZE", fontSize = 10.sp, letterSpacing = 1.5.sp, color = Muted)
@@ -110,13 +110,13 @@ fun TrackerApp(vm: TrackerViewModel, nfc: String, openNfc: () -> Unit) {
     val time = now.atZone(data.zone)
     Column(modifier.fillMaxWidth().verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(Modifier.height(22.dp))
-        Text(time.format(DateTimeFormatter.ofPattern("HH:mm:ss")), fontSize = 56.sp, fontWeight = FontWeight.Light, color = Ink)
+        Text(time.format(DateTimeFormatter.ofPattern("HH:mm:ss")), fontSize = 56.sp, fontWeight = FontWeight.Light, color = Foreground)
         Text(time.format(dateLabel).replaceFirstChar { it.titlecase(italian) }, color = Muted, textAlign = TextAlign.Center)
         Spacer(Modifier.height(28.dp))
-        Card(Modifier.fillMaxWidth().widthIn(max = 680.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+        Card(Modifier.fillMaxWidth().widthIn(max = 680.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
             Column(Modifier.fillMaxWidth().padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 val punch = feedback?.punch
-                val accent = if (feedback != null && !feedback.success) MaterialTheme.colorScheme.error else if (punch?.event?.type == EXIT) Color(0xFF456BB3) else Teal
+                val accent = if (feedback != null && !feedback.success) MaterialTheme.colorScheme.error else if (punch?.event?.type == EXIT) ExitBlue else Teal
                 Box(Modifier.size(108.dp).clip(CircleShape).background(accent.copy(alpha = .09f)), contentAlignment = Alignment.Center) {
                     Icon(if (feedback?.success == true) Icons.Outlined.CheckCircle else if (feedback != null) Icons.Outlined.Info else Icons.Outlined.Nfc, null, Modifier.size(52.dp), tint = accent)
                 }
@@ -175,7 +175,7 @@ fun TrackerApp(vm: TrackerViewModel, nfc: String, openNfc: () -> Unit) {
         if (people.isEmpty()) item { EmptyState("Nessun dipendente. Aggiungi la prima persona, poi associa il suo tag NFC.") }
         items(people, key = { it.id }) { employee ->
             val tag = data.tags.find { it.employeeId == employee.id }
-            Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(Modifier.size(42.dp).clip(CircleShape).background(Teal.copy(alpha = .08f)), contentAlignment = Alignment.Center) { Text("${employee.firstName.take(1)}${employee.lastName.take(1)}", color = Teal, fontWeight = FontWeight.Bold) }
@@ -277,11 +277,11 @@ private fun filterOrNull(id: Long?, first: String, last: String): ReportFilter? 
         }
         if (events.isEmpty()) item { EmptyState("Nessuna timbratura nel periodo selezionato.") }
         items(events, key = { it.id }) { event ->
-            Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text(event.type + if (event.cancelled) " · ANNULLATA" else if (event.id in incomplete) " · INCOMPLETA" else "", color = if (event.cancelled || event.id in incomplete) Amber else if (event.type == ENTRY) Teal else Color(0xFF456BB3), fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text(event.type + if (event.cancelled) " · ANNULLATA" else if (event.id in incomplete) " · INCOMPLETA" else "", color = if (event.cancelled || event.id in incomplete) Amber else if (event.type == ENTRY) Teal else ExitBlue, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             Text(data.employees.find { it.id == event.employeeId }?.fullName ?: "Dipendente ${event.employeeId}", fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 6.dp))
                             Text(Instant.ofEpochMilli(event.timestamp).atZone(data.zone).format(eventLabel), color = Muted, fontSize = 13.sp)
                             Text("${event.source} · #${event.id}", color = Muted, fontSize = 11.sp)
@@ -349,7 +349,7 @@ private fun filterOrNull(id: Long?, first: String, last: String): ReportFilter? 
             val daily = Attendance.daily(events, data.zone, monthPeriod)
             val monthTotal = Attendance.total(events, monthPeriod)
             val expected = e.dailyMinutes?.let { Attendance.theoreticalMillis(month, today, Instant.ofEpochMilli(e.createdAt).atZone(data.zone).toLocalDate(), it) }
-            Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(e.fullName + if (e.deleted) " (eliminato)" else "", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     StatLine("Oggi", durationLabel(Attendance.total(events, Period.dates(today, today, data.zone))))
@@ -367,10 +367,10 @@ private fun filterOrNull(id: Long?, first: String, last: String): ReportFilter? 
     }
 }
 @Composable private fun StatCard(value: String, label: String, icon: ImageVector) {
-    Card(colors = CardDefaults.cardColors(containerColor = Ink)) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
         Row(Modifier.fillMaxWidth().padding(22.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, null, tint = Color(0xFF9FE0CE), modifier = Modifier.size(28.dp))
-            Column(Modifier.padding(start = 18.dp)) { Text(value, color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold); Text(label, color = Color(0xFFC2CEDA), fontSize = 12.sp) }
+            Icon(icon, null, tint = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.size(28.dp))
+            Column(Modifier.padding(start = 18.dp)) { Text(value, color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 24.sp, fontWeight = FontWeight.Bold); Text(label, color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp) }
         }
     }
 }
@@ -404,7 +404,7 @@ private fun filterOrNull(id: Long?, first: String, last: String): ReportFilter? 
     }
 }
 @Composable private fun ActionCard(title: String, description: String, action: String, icon: ImageVector, enabled: Boolean, click: () -> Unit) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White)) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.fillMaxWidth().padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) { Icon(icon, null, tint = Teal); Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(start = 12.dp)) }
             Text(description, color = Muted, fontSize = 13.sp, modifier = Modifier.padding(vertical = 12.dp))
@@ -443,7 +443,7 @@ private fun filterOrNull(id: Long?, first: String, last: String): ReportFilter? 
         if (data.audit.isEmpty()) item { EmptyState("Nessuna modifica amministrativa registrata.") }
         items(data.audit, key = { it.id }) { entry ->
             var expanded by remember { mutableStateOf(false) }
-            Card(onClick = { expanded = !expanded }, colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Card(onClick = { expanded = !expanded }, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(entry.action.replace('_', ' '), fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     Text(Instant.ofEpochMilli(entry.changedAt).atZone(data.zone).format(eventLabel) + (entry.eventId?.let { " · Evento #$it" } ?: ""), fontSize = 12.sp, color = Muted)

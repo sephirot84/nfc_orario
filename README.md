@@ -2,7 +2,7 @@
 
 Terminale Android condiviso per registrare entrate e uscite tramite **UID NFC**, completamente offline. Kotlin, Jetpack Compose / Material 3, Room, MVVM, Coroutines e Flow. Android 10 (API 29) o successivo. Nessun account, server, pubblicità o permesso Internet.
 
-## Download della versione 1.0.1
+## Download della versione 1.0.2 · Tema scuro
 
 - [APK installabile di sviluppo](downloads/NFC-Time-Tracker-debug.apk)
 - [Archivio dei sorgenti della versione attuale](downloads/NFC-Time-Tracker-source.zip)
@@ -10,7 +10,13 @@ Terminale Android condiviso per registrare entrate e uscite tramite **UID NFC**,
 - [Risultati delle verifiche](VERIFICA.md)
 - [Checksum SHA-256 dei file di consegna](downloads/SHA256SUMS.txt)
 
-Per scaricare l'APK dalla pagina del file su GitHub, usare **Download raw file**. Il nome visualizzato nell'elenco delle app Android e nella schermata principale è **NFC Time Tracker 1.0.1**. Il numero viene generato dal `versionName` della build. Lo ZIP contiene i sorgenti della stessa versione dell'APK; cache, SDK, chiavi di firma e configurazioni locali non sono inclusi.
+Per scaricare l'APK dalla pagina del file su GitHub, usare **Download raw file**. Il nome visualizzato nell'elenco delle app Android e nella schermata principale è **NFC Time Tracker 1.0.2**. Il numero viene generato dal `versionName` della build. Lo ZIP contiene i sorgenti della stessa versione dell'APK; cache, SDK, chiavi di firma e configurazioni locali non sono inclusi.
+
+## Tema scuro
+
+La versione **1.0.2** usa un tema scuro fisso, anche se Android è impostato sul tema chiaro: sfondo blu notte, schede scure, testi chiari, ENTRATA verde acqua e USCITA azzurra. Dialoghi, menu, campi di inserimento e barre di sistema seguono la stessa impostazione. Le etichette testuali distinguono sempre le operazioni, oltre al colore.
+
+Questa versione mantiene la diagnostica UID introdotta nella 1.0.1. Per aggiornare un'installazione esistente usare l'APK con la stessa firma, senza disinstallare l'app.
 
 ## Installazione e primo avvio
 

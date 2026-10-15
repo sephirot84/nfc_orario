@@ -8,6 +8,7 @@ import android.os.Vibrator
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -25,7 +26,10 @@ class MainActivity : ComponentActivity() {
     private var nfcStatus by mutableStateOf("Verifica NFC…")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+        )
         setContent { TrackerTheme { TrackerApp(model, nfcStatus, {
             runCatching { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }.onFailure { model.notice.value = "Impostazioni NFC non disponibili su questo dispositivo" }
         }) } }

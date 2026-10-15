@@ -1,9 +1,11 @@
 <resources>
-    <style name="Theme.NfcTimeTracker" parent="android:style/Theme.Material.Light.NoActionBar">
+    <style name="Theme.NfcTimeTracker" parent="android:style/Theme.Material.NoActionBar">
         <item name="android:fontFamily">sans</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">#F4F6F9</item>
-        <item name="android:navigationBarColor">#F4F6F9</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:statusBarColor">#0D141D</item>
+        <item name="android:navigationBarColor">#0D141D</item>
+        <item name="android:windowBackground">#0D141D</item>
         <item name="android:windowActionModeOverlay">true</item>
     </style>
 </resources>
