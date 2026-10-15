@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-data class ScanFeedback(val text: String, val punch: PunchResult? = null, val success: Boolean = false)
+data class ScanFeedback(val text: String, val punch: PunchResult? = null, val success: Boolean = false, val uid: String? = null)
 
 class TrackerViewModel(application: Application) : AndroidViewModel(application) {
     private val repo = (application as TrackerApplication).repository
@@ -64,12 +64,12 @@ class TrackerViewModel(application: Application) : AndroidViewModel(application)
                         }
                     } else {
                         val result = repo.punch(uid)
-                        showFeedback(ScanFeedback("Timbratura registrata", result, true)); vibration.tryEmit(Unit)
+                        showFeedback(ScanFeedback("Timbratura registrata", result, true, TrackerRepository.normalizeUid(uid))); vibration.tryEmit(Unit)
                     }
                 } catch (e: Exception) {
                     if (e is CancellationException) throw e
                     if (admin.value) notice.value = e.message ?: "Impossibile associare il tag"
-                    else showFeedback(ScanFeedback(e.message ?: "Errore di lettura"))
+                    else showFeedback(ScanFeedback(e.message ?: "Errore di lettura", uid = runCatching { TrackerRepository.normalizeUid(uid) }.getOrNull()))
                 }
             }
         }

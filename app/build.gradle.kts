@@ -13,8 +13,9 @@ android {
         applicationId = "it.nfctimetracker"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
+        resValue("string", "app_name", "NFC Time Tracker $versionName")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
@@ -51,6 +52,8 @@ dependencies {
 }
 
 tasks.withType<Test>().configureEach {
+    // Isolate Robolectric/Compose application and dispatcher state between test classes.
+    forkEvery = 1
     val testHome = layout.buildDirectory.dir("test-home").get().asFile
     systemProperty("user.home", testHome.absolutePath)
     doFirst { testHome.mkdirs() }

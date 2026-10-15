@@ -2,15 +2,15 @@
 
 Terminale Android condiviso per registrare entrate e uscite tramite **UID NFC**, completamente offline. Kotlin, Jetpack Compose / Material 3, Room, MVVM, Coroutines e Flow. Android 10 (API 29) o successivo. Nessun account, server, pubblicità o permesso Internet.
 
-## Download della versione 1.0.0
+## Download della versione 1.0.1
 
 - [APK installabile di sviluppo](downloads/NFC-Time-Tracker-debug.apk)
-- [Archivio dei sorgenti della consegna iniziale](downloads/NFC-Time-Tracker-source.zip)
+- [Archivio dei sorgenti della versione attuale](downloads/NFC-Time-Tracker-source.zip)
 - [Report XLSX di esempio](downloads/Esempio-report.xlsx)
 - [Risultati delle verifiche](VERIFICA.md)
 - [Checksum SHA-256 dei file di consegna](downloads/SHA256SUMS.txt)
 
-Per scaricare l'APK dalla pagina del file su GitHub, usare **Download raw file**. Il codice aggiornato del progetto è quello presente nel repository; lo ZIP conserva la consegna iniziale. Cache, SDK, chiavi di firma e configurazioni locali non sono inclusi.
+Per scaricare l'APK dalla pagina del file su GitHub, usare **Download raw file**. Il nome visualizzato nell'elenco delle app Android e nella schermata principale è **NFC Time Tracker 1.0.1**. Il numero viene generato dal `versionName` della build. Lo ZIP contiene i sorgenti della stessa versione dell'APK; cache, SDK, chiavi di firma e configurazioni locali non sono inclusi.
 
 ## Installazione e primo avvio
 
@@ -23,6 +23,14 @@ Per scaricare l'APK dalla pagina del file su GitHub, usare **Download raw file**
 NFC deve essere disponibile e attivato. Il terminale deve essere visibile e il dispositivo sbloccato: non vengono effettuate timbrature in background. In amministrazione le letture non timbrano; servono solo all'associazione esplicitamente avviata. La conferma dura circa tre secondi e arriva **dopo il commit** del database. Il display può restare acceso. Una lettura di un altro dipendente può essere elaborata anche durante la conferma.
 
 La build debug è installabile e firmata con la chiave di sviluppo generata localmente. Per distribuzione stabile usare **Build → Generate Signed Bundle / APK** in Android Studio, conservando in sicurezza la propria chiave di firma. Non cambiare firma per aggiornare un'installazione esistente.
+
+### Verifica di letture attribuite al dipendente sbagliato
+
+Dalla versione 1.0.1 la conferma mostra anche l'UID appena letto, inclusi gli avvisi di tag sconosciuto e antiduplicazione. Confrontarlo con l'UID in **Dipendenti**, insieme al nome visualizzato. Un UID sconosciuto non deve creare eventi né cambiare l'alternanza di alcun dipendente.
+
+Per una prova con due persone e due tag distinti, partire da uno storico di prova vuoto: A → ENTRATA di A, B → ENTRATA di B, attendere l'intervallo antiduplicazione, A → USCITA di A, B → USCITA di B. Con uno storico esistente il primo verso dipende dall'ultima timbratura valida di ciascuna persona. Il test `NfcScanTest` ripete questa sequenza tramite il callback NFC dell'attività e verifica nomi, UID visualizzati ed eventi salvati, inserendo anche un tag sconosciuto. La lettura è simulata: l'hardware NFC resta da verificare sul dispositivo.
+
+La versione 1.0.1 aggiunge questa visibilità e la verifica automatica; non modifica la regola di alternanza, già basata sull'ultima timbratura del dipendente identificato dal tag. Il problema segnalato non è stato riprodotto nella copia locale verificata.
 
 ## Funzioni e regole di calcolo
 

@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import it.nfctimetracker.R
 import it.nfctimetracker.data.*
 import it.nfctimetracker.domain.*
 import it.nfctimetracker.domain.Period
@@ -62,7 +64,7 @@ fun TrackerApp(vm: TrackerViewModel, nfc: String, openNfc: () -> Unit) {
             Row(Modifier.fillMaxWidth().padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(44.dp).clip(MaterialTheme.shapes.small).background(Teal), contentAlignment = Alignment.Center) { Icon(Icons.Outlined.Nfc, null, tint = Color.White) }
                 Column(Modifier.weight(1f).padding(start = 12.dp)) {
-                    Text("NFC Time Tracker", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                     Text(if (admin) "AREA AMMINISTRATIVA" else "TERMINALE PRESENZE", fontSize = 10.sp, letterSpacing = 1.5.sp, color = Muted)
                 }
                 if (admin) IconButton(onClick = { vm.lock() }) { Icon(Icons.AutoMirrored.Outlined.Logout, "Torna al terminale") }
@@ -129,6 +131,9 @@ fun TrackerApp(vm: TrackerViewModel, nfc: String, openNfc: () -> Unit) {
                 } else {
                     Text("AVVICINA IL TAG NFC", fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                     Text("Entrata e uscita si registrano\nautomaticamente con il tuo tag.", textAlign = TextAlign.Center, color = Muted, modifier = Modifier.padding(top = 14.dp))
+                }
+                feedback?.uid?.let { uid ->
+                    Text("UID $uid", color = Muted, fontSize = 12.sp, modifier = Modifier.padding(top = 12.dp))
                 }
                 Spacer(Modifier.height(26.dp))
                 AssistChip(onClick = { if (nfc != "NFC pronto") openNfc() }, label = { Text(nfc) }, leadingIcon = {
